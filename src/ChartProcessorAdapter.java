@@ -10,17 +10,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Decorator that adds charting functionality.
- * Dynamically updates the chart based on processed data or user selections.
+ * Adapter for the ChartProcessor class.
+ * Implements the ChartAdapter interface, adapting the charting functionality to work with the GUI.
  */
-public class ChartProcessor extends CSVDecorator {
+public class ChartProcessorAdapter implements ChartAdapter {
     private JFrame frame;
     private ChartPanel chartPanel;
 
-    public ChartProcessor(CSVProcessor csvProcessor) {
-        super(csvProcessor);
-
-        // Initialize the JFrame and ChartPanel
+    /**
+     * Initializes the chart display window.
+     * This adapts the JFreeChart library to a unified interface.
+     */
+    public ChartProcessorAdapter() {
         frame = new JFrame("Poverty Chart Viewer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
@@ -31,30 +32,30 @@ public class ChartProcessor extends CSVDecorator {
     }
 
     /**
-     * Updates and displays the chart with the given dataset.
-     * The dataset can be created dynamically based on user selections or filtered/sorted data.
+     * Displays a bar chart using the provided data.
+     * Adapts the chart creation process to the ChartAdapter interface.
      */
+    @Override
     public void displayChart(List<Map<String, String>> data) {
         DefaultCategoryDataset dataset = createDataset(data);
 
-        // Create a bar chart with proper parameters
         JFreeChart barChart = ChartFactory.createBarChart(
-                "Poverty Statistics",           // Chart title
-                "State",                        // X-axis label
-                "Percentage",                   // Y-axis label
-                dataset,                        // Data
-                PlotOrientation.VERTICAL,       // Chart orientation
-                true,                           // Include legend
-                true,                           // Enable tooltips
-                false                           // Disable URLs
+                "Poverty Statistics",
+                "State",
+                "Percentage",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
         );
 
-        // Update the chart panel
         chartPanel.setChart(barChart);
     }
 
     /**
-     * Dynamically creates a dataset from the provided data.
+     * Creates a dataset for the chart from the provided data.
+     * Adapts raw data into a format that JFreeChart can use.
      */
     private DefaultCategoryDataset createDataset(List<Map<String, String>> data) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -71,9 +72,6 @@ public class ChartProcessor extends CSVDecorator {
         return dataset;
     }
 
-    /**
-     * Safely parses a string to a double, returning 0 if the input is null or invalid.
-     */
     private double parseSafe(String value) {
         if (value == null || value.trim().isEmpty()) {
             return 0.0;

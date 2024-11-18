@@ -2,21 +2,39 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Decorator that adds sorting and filtering functionality.
+ * Class that processes data with filtering and sorting capabilities.
+ * Implements the CSVProcessor interface.
  */
-import java.util.*;
-import java.util.stream.Collectors;
-
-public class DataProcessor extends CSVDecorator {
+public class DataProcessor implements CSVProcessor {
+    private final CSVProcessor csvProcessor;
     private Comparator<Map<String, String>> comparator;
     private String filterKey;
     private String filterValue;
 
     public DataProcessor(CSVProcessor csvProcessor) {
-        super(csvProcessor);
+        this.csvProcessor = csvProcessor;
         this.comparator = null;
         this.filterKey = null;
         this.filterValue = null;
+    }
+
+    @Override
+    public List<Map<String, String>> process() {
+        List<Map<String, String>> data = csvProcessor.process();
+
+        // Apply filtering
+        if (filterKey != null && filterValue != null) {
+            data = data.stream()
+                    .filter(map -> map.get(filterKey).equalsIgnoreCase(filterValue))
+                    .collect(Collectors.toList());
+        }
+
+        // Apply sorting
+        if (comparator != null) {
+            data.sort(comparator);
+        }
+
+        return data;
     }
 
     public void setComparator(Comparator<Map<String, String>> comparator) {
@@ -27,28 +45,4 @@ public class DataProcessor extends CSVDecorator {
         this.filterKey = filterKey;
         this.filterValue = filterValue;
     }
-
-    @Override
-    public List<Map<String, String>> process() {
-        List<Map<String, String>> data = super.process();
-
-        // Apply filtering
-        if (filterKey != null && filterValue != null) {
-            data = data.stream()
-                    .filter(map -> map.get(filterKey).equalsIgnoreCase(filterValue))
-                    .collect(Collectors.toList());
-
-            // Reset the filter
-            filterKey = null;
-            filterValue = null;
-        }
-
-        // Apply sorting
-        if (comparator != null) {
-            data.sort(comparator);
-        }
-
-        return data;
-    }
 }
-

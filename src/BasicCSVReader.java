@@ -1,14 +1,15 @@
-import org.apache.commons.csv.*;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Concrete implementation of the CSVProcessor interface.
- * This class represents the core component in the Decorator Pattern.
- * It is responsible for reading the CSV file and returning the data as a list of maps.
+ * Class for reading CSV files.
+ * Implements the CSVProcessor interface to retrieve data as a list of maps.
  */
 public class BasicCSVReader implements CSVProcessor {
     private final String filePath;
@@ -25,7 +26,7 @@ public class BasicCSVReader implements CSVProcessor {
             for (CSVRecord record : records) {
                 data.add(record.toMap());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return data;
