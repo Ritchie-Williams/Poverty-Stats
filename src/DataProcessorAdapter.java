@@ -6,7 +6,6 @@ import java.util.Map;
  * Adapter for the DataProcessor class.
  * Implements the DataAdapter interface to make DataProcessor compatible with the GUI.
  */
-
 public class DataProcessorAdapter implements DataAdapter {
     private final DataProcessor dataProcessor;
 

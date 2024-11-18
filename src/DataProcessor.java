@@ -2,7 +2,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Class that processes data with filtering and sorting capabilities.
+ * Class for processing data with filtering and sorting capabilities.
  * Implements the CSVProcessor interface.
  */
 public class DataProcessor implements CSVProcessor {
@@ -13,23 +13,20 @@ public class DataProcessor implements CSVProcessor {
 
     public DataProcessor(CSVProcessor csvProcessor) {
         this.csvProcessor = csvProcessor;
-        this.comparator = null;
-        this.filterKey = null;
-        this.filterValue = null;
     }
 
     @Override
     public List<Map<String, String>> process() {
         List<Map<String, String>> data = csvProcessor.process();
 
-        // Apply filtering
+        // Apply filtering only if a filter is set
         if (filterKey != null && filterValue != null) {
             data = data.stream()
                     .filter(map -> map.get(filterKey).equalsIgnoreCase(filterValue))
                     .collect(Collectors.toList());
         }
 
-        // Apply sorting
+        // Apply sorting if a comparator is set
         if (comparator != null) {
             data.sort(comparator);
         }
@@ -37,12 +34,13 @@ public class DataProcessor implements CSVProcessor {
         return data;
     }
 
-    public void setComparator(Comparator<Map<String, String>> comparator) {
-        this.comparator = comparator;
-    }
-
     public void setFilter(String filterKey, String filterValue) {
         this.filterKey = filterKey;
         this.filterValue = filterValue;
     }
+
+    public void setComparator(Comparator<Map<String, String>> comparator) {
+        this.comparator = comparator;
+    }
 }
+

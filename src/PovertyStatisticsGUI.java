@@ -49,21 +49,17 @@ public class PovertyStatisticsGUI {
                 List<Map<String, String>> filteredData = dataAdapter.getData();
                 updateTable(filteredData);
                 chartAdapter.displayChart(filteredData);
-            } else {
-                // Reset to the full dataset when filter is empty
-                List<Map<String, String>> fullData = dataAdapter.getData();
-                updateTable(fullData);
-                chartAdapter.displayChart(fullData);
             }
         });
 
         // Reset filter functionality
         JButton resetFilterButton = new JButton("Reset Filter");
         resetFilterButton.addActionListener(e -> {
-            // Reset the table and chart to the full dataset
+            // Clear any existing filters
+            dataAdapter.filter(null, null); // Reset filter
             List<Map<String, String>> fullData = dataAdapter.getData();
-            updateTable(fullData);
-            chartAdapter.displayChart(fullData);
+            updateTable(fullData); // Update table with the full dataset
+            chartAdapter.displayChart(fullData); // Update chart with the full dataset
             filterField.setText(""); // Clear the filter field
         });
 
